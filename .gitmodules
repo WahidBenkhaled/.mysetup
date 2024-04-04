@@ -1,0 +1,18 @@
+[submodule "suckless/dwm"]
+	path = packages/suckless/dwm
+	url = https://git.suckless.org/dwm
+[submodule "suckless/dmenu"]
+	path = packages/suckless/dmenu
+	url = https://git.suckless.org/dmenu
+[submodule "suckless/st"]
+	path = packages/suckless/st
+	url = https://git.suckless.org/st
+[submodule "suckless/slstatus"]
+	path = packages/suckless/slstatus
+	url = https://git.suckless.org/slstatus
+[submodule "suckless/slock"]
+	path = packages/suckless/slock
+	url = https://git.suckless.org/slock
+[submodule "fairyglade/ly"]
+	path = packages/fairyglade/ly
+	url = https://github.com/fairyglade/ly
