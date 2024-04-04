@@ -1,0 +1,28 @@
+diff --git a/config.def.h b/config.def.h
+index d805331..35a2b61 100644
+--- a/config.def.h
++++ b/config.def.h
+@@ -1,7 +1,7 @@
+ /* See LICENSE file for copyright and license details. */
+ 
+ /* interval between updates (in ms) */
+-const unsigned int interval = 1000;
++const unsigned int interval = 500;
+ 
+ /* text to show if no value can be retrieved */
+ static const char unknown_str[] = "n/a";
+@@ -63,7 +63,13 @@ static const char unknown_str[] = "n/a";
+  * wifi_essid          WiFi ESSID                      interface name (wlan0)
+  * wifi_perc           WiFi signal in percent          interface name (wlan0)
+  */
++
++static const char vol[] = "amixer sget Master | tail -n 1 | awk '{if ($4 == \"[0%]\") {print \"[OF]\"} else if ($6 == \"[off]\") {print \"[OF]\"} else {print $4}}'";
++
+ static const struct arg args[] = {
+ 	/* function format          argument */
+-	{ datetime, "%s",           "%F %T" },
++	{ wifi_essid,		" %s ", 		"wlp2s0" },
++	{ run_command,          "%s ",        		vol },
++	{ ram_perc, 		"[R%s] ", 		NULL },
++	{ datetime, 		"%s   ", 		"%a.%m.%d %R" },
+ };

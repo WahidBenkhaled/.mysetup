@@ -1,0 +1,15 @@
+diff --git a/config.mk b/config.mk
+index 7f35f71..f9f6575 100644
+--- a/config.mk
++++ b/config.mk
+@@ -7,8 +7,8 @@ VERSION = 0.9.1
+ PREFIX = /usr/local
+ MANPREFIX = $(PREFIX)/share/man
+ 
+-X11INC = /usr/X11R6/include
+-X11LIB = /usr/X11R6/lib
++X11INC = /usr/include/x11
++X11LIB = /use/lib/x86_64-linux-gnu
+ 
+ PKG_CONFIG = pkg-config
+ 
