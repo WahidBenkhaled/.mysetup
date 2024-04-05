@@ -7,7 +7,7 @@ ask() {
     else
         read -rp "$1 (Y/n): " response < /dev/tty
     fi
-    [[ -z "$response" ]] || [[ "$response" = [Yy] ]] || exit 0
+    [[ -z "$response" ]] || [[ "$response" = [Yy] ]]
 }
 
 # Check if the script is ran with 
@@ -16,18 +16,9 @@ if [[ $EUID -ne 0 ]]; then
     exit 1
 fi
 
-
 # Install essential packages
 nala --version &> /dev/null || apt install nala -y
 nala install make zip curl gpg -y # remove git since it is the tool that download this script
-
-
-# Set up the dotfiles
-if ask "Set up dotfiles?"; then
-git clone --separate-git-dir="$HOME"/.dotfiles https://git.benkhaled.com/.dotfiles ~/.cache/dotfiles
-cp -iRT "$HOME"/.cache/dotfiles/ "$HOME"/ && rm -r "$HOME"/.cache/dotfiles/
-fi
-
 
 # Install base system dependencies
 nala install xserver-xorg-core xserver-xorg-input-all xserver-xorg-video-fbdev xserver-xorg-video-intel xinit -y
@@ -41,7 +32,7 @@ for f in ~/.mysetup/patches/*;do
 done
 
 # Install Nerd-font
-fontUrl="$(wget -qO- "https://www.nerdfonts.com/font-downloads" | grep -oim1 'http[^\"]*FiraCode.zip')"
+fontUrl="$(wget -qO- "https://www.nerdfonts.com/font-downloads" | grep -oim1 'http[^\"]*FiraCode.zip')" && mkdir -p ~/.fonts/FiraCode
 wget -qO- "$fontUrl" | busybox unzip -qq - -d "$HOME/.fonts/FiraCode/" && fc-cache -f
 
 # Install suckless software   ---------- ---------- ---------- ---------- ---------- ---------- ---------- INSTALLATION 
@@ -69,11 +60,11 @@ nala install feh mvp musikcube -y
 
 
 # Install the latest stable neovim release
-nala install ninja-build gettext cmake unzip curl #dependancies can be removed later
+nala install ninja-build gettext cmake unzip curl -y #dependancies can be removed later
 wget -qO- https://github.com/neovim/neovim/archive/refs/tags/stable.zip | busybox unzip -qq - -d ~/.mysetup/packages/
-make CMAKE_BUILD_TYPE=Release -C neovim-stable/
-cpack -G DEB --config neovim-stable/build/CPackConfig.cmake
-nala install neovim-stable/build/*.deb -y
+make CMAKE_BUILD_TYPE=Release -C ~/.mysetup/packages/neovim-stable/
+cpack -G DEB --config ~/.mysetup/packages/neovim-stable/build/CPackConfig.cmake
+nala install ~/.mysetup/packages/neovim-stable/build/*.deb -y
 
 
 # Install browser
@@ -94,11 +85,14 @@ fi
 
 
 for p in gimp inkscape ffmpeg imagemagick; do
-    if [ -t 0 ]; then
-        read -rp "Install $p (y/N): " response
-    else
-        read -rp "Install $p (y/N): " response < /dev/tty
-    fi
-    [[ $response = [Yy] ]] || continue
+    if ask "Install $p?"; then
     nala insatall "$p" -y
+    fi
 done
+
+
+# Set up the dotfiles
+if ask "Set up dotfiles?"; then
+git clone --separate-git-dir="$HOME"/.dotfiles https://git.benkhaled.com/.dotfiles ~/.cache/dotfiles
+cp -iRT "$HOME"/.cache/dotfiles/ "$HOME"/ && rm -r "$HOME"/.cache/dotfiles/
+fi
